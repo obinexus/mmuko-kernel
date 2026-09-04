@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools>=68", "wheel", "Cython>=3.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dynamic-cabi-loader"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["Cython>=3.0"]
+

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "modules": {
+    "math-runtime": {
+      "script": "runtime/math-runtime.js",
+      "dll": "native/math_runtime.dll",
+      "calling_convention": "cdecl",
+      "load_cost": 1,
+      "dependencies": [],
+      "exports": {
+        "runtime_init": { "args": [], "returns": "int32" },
+        "runtime_add": { "args": ["int32", "int32"], "returns": "int32" }
+      }
+    }
+  }
+}
+
