@@ -1,0 +1,43 @@
+[package]
+name = "mmuko-kernel"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+description = "MMUKO kernel dynamic C ABI: SemVerX trident consensus binding for mmuko32 and mmuko64"
+license = "LicenseRef-OBINexus-1.0"
+publish = false
+
+[lib]
+name = "mmuko_kernel"
+# rlib for `cargo test`; staticlib so the C kernel can link kernel.rs directly.
+crate-type = ["rlib", "staticlib"]
+
+[features]
+# Default is freestanding.  The crate builds with no allocator, no libc and no
+# std, so it links into the MMUKO kernel at ring 0 as-is.
+default = []
+# `hosted` pulls in std for the test harness and the FFI differential suite.
+# It changes nothing about the resolver's behaviour -- only what it may call.
+hosted = []
+# Suppress this crate's #[panic_handler] so a host kernel can supply its own.
+# Only meaningful for the rlib: a standalone staticlib needs one at link time.
+extern-panic = []
+
+# No external crates, by design.  This tree must build on a machine with no
+# network and no registry cache, which is the normal condition for kernel work
+# and for the OBINexus deployment target.
+[dependencies]
+
+# The kernel build aborts on panic: there is nothing to unwind into at ring 0,
+# and a landing-pad table in a freestanding image is dead weight.
+#
+# `panic = "abort"` is set only on the release profile. The dev profile has to
+# keep unwinding because libtest needs it to report a failing assertion, and a
+# resolver you cannot write assertions against is not one anyone should trust.
+[profile.release]
+panic = "abort"
+overflow-checks = true
+lto = true
+
+[profile.dev]
+overflow-checks = true
